@@ -53,7 +53,7 @@ let studentList = (req, res) => {
 
 
 let updateStudent = (req, res) => {
-    student.findOneAndUpdate({ _id: req.query.id }, req.body, { multi: true }).exec((err, result) => {
+    student.findOneAndUpdate({ studentId: req.query.id }, req.body, { multi: true }).exec((err, result) => {
         if (err) {
             let apiResponse = response.generate(true, "error in updating student", 500, null)
             res.send(apiResponse)
@@ -66,13 +66,46 @@ let updateStudent = (req, res) => {
     });
 
 }
+let deleteStudent = (req, res) => {
+    student.findOneAndDelete({ studentId: req.query.id }, { multi: true }).exec((err, result) => {
+        if (err) {
+            let apiResponse = response.generate(true, "error in deleting student", 500, null)
+            res.send(apiResponse)
+        }
+        else {
+            let apiResponse = response.generate(false, "student deleted successfully", 200, result)
+            res.send(apiResponse)
+        }
+
+    });
+
+}
+let getStudent = (req, res) => {
+    let a = {
+
+    }
+    a["studentId"] = req.query.id
+    student.findOne(a).exec((err, result) => {
+        if (err) {
+            let apiresponse = response.generate(true, "error", 500, null)
+            res.send(apiresponse)
+        }
+        else {
+            let apiresponse = response.generate(false, "success", 200, result)
+            res.send(apiresponse)
+        }
+    })
 
 
+
+}
 
 
 
 module.exports = {
     addStudent: addStudent,
     updateStudent: updateStudent,
-    studentList:studentList
+    studentList:studentList,
+    deleteStudent:deleteStudent,
+    getStudent:getStudent
 }
